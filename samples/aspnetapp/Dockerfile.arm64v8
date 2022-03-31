@@ -3,13 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
-COPY aspnetapp2.sln .
-COPY aspnetapp2/*.csproj ./aspnetapp2/
+COPY URPIfan.sln .
+COPY URPIfan/*.csproj ./URPIfan/
 RUN dotnet restore -r linux-arm64
 
 # copy everything else and build app
-COPY aspnetapp2/. ./aspnetapp2/
-WORKDIR /source/aspnetapp2
+COPY URPIfan/. ./URPIfan/
+WORKDIR /source/URPIfan
 RUN dotnet publish -c release -o /app -r linux-arm64 --self-contained false --no-restore
 
 # final stage/image
@@ -21,4 +21,4 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libgpiod-dev libraspberrypi-bin
 
 COPY --from=build /app ./
-ENTRYPOINT ["./aspnetapp2"]
+ENTRYPOINT ["./URPIfan"]
